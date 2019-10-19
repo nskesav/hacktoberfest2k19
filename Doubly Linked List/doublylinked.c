@@ -1,161 +1,177 @@
-#include "stdio.h"
-#include "conio.h"
-#include "iostream.h"
-using namespace std;
-int insertdata(int x);
-void display();
-void deleteint(int x);
-int searchint(int x);
+#include<stdio.h>
+#include<stdlib.h>
 
-int compare_fn(int a,int b)
+typedef struct node 
 {
-    //Write the compare function for the variables 'a' and 'b' and return the value
-}
-
-int compare_no=1;
-
-struct node
-{
+	struct node *rlink;
 	int data;
-	node *prev;
-	node *next;
-};
+	struct node *llink;
+}NODE;
 
-//A missing line here which initialises the top condition.
-
-int main()
+typedef struct list
 {
-    int ch,d,y;
-    char ans='y';
-    while(ans=='y')
-    {
-        cout<<"\n\t 1.Insert        2. Delete     3.EXIT\nEnter Choice : ";
-        cin>>ch;
-        if(ch==1)
-        {
-            cout<<"Enter An Element To be inserted : ";
-            cin>>d;
-            d=insertdata(d);
-            display();
-        }
-        else if(ch==2)
-        {
-            cout<<"Enter Element To Be Deleted : ";
-            cin>>d;
-            deleteint(d);
-            display();
-        }
-        else
-            return 0;
-    }
-    return 0;
+	NODE *head;
+	int length;
+}List;
+
+List* create_list() {
+        List *newList = (List*)malloc(sizeof(List));
+        newList->head = NULL;
+        newList->length = 0;
+        return newList;
 }
-
-int searchint(int x)
+void insertat(List *list, int data, int pos)
 {
-	int count=0;
-	node *searchele=top;
-	while( searchele!=NULL)
+	NODE *temp,*p;
+	temp = (NODE *)malloc(sizeof(NODE));
+	temp->llink = NULL;
+	temp->data = data;
+	temp->rlink = NULL;
+	p = list->head;
+	int i;
+	if(pos >= 0 && pos <= (list->length)){
+	if(list->head == NULL)
 	{
-	    if(compare_fn(x,searchele->data)==compare_no)
-	    {
-		searchele=searchele->next;
-	    count+=1;
-	    }
-	    else
-		break;
+		list->head = temp;
+		list->length++;
+		return;
 	}
-	return count;
-}
-int insertdata(int x)
-{
-    if(top==NULL)
-    {
-        //Write a code for this particular condition where TOP == NULL
-    }
-    else if(compare_fn(top->data ,x)==compare_no)
-    {
-        node *n=new node;
-        n->data=x;
-        n->next=top;
-        n->prev=NULL;
-        top->prev=n;
-        top=n;
-    }
-    else
-    {
-	    int c=searchint(x);
-	    node *insertele=top;
-	    for(int i=0;i<c-1;i++)
-		insertele=insertele->next;
-	    node *n=new node;
-	    n->data=x;
-	    node *b=insertele->next;
-	    node *N =insertele;
-	    //Write 3 lines of code which links all the nodes in the linked list while inserting the data into the list.
-	    if(b!=NULL)
-		b->prev=n;
-    }
-}
-void display()
-{
-	cout<<"Element In The Linked List Are : ";
-	node *disp=top;
-	while(disp!=NULL)
+	else if(pos == 0)
 	{
-	    cout<<" "<<disp->data;
-	    if(_______)//write the particular condition for which the while condition needs to end
-	    {
-		break;
-	    }
-	    disp=disp->next;
+		temp->rlink = p;
+		p->llink = temp;
+		temp->llink = NULL;
+		list->head = temp;
+		list->length++;
+		return;
+	}
+	else
+	{
+		for(i = 1; i<pos;i++)
+		{
+			p = p->rlink;
+		}
+		temp->rlink = p->rlink;
+		if(p->rlink != NULL)
+			p->rlink->llink = temp;
+		p->rlink = temp;
+		temp->llink = p;
+		list->length++;
+		return;
+	}
+	}
+	else 
+		return;
+}
+void deleteat(List *list, int pos)
+{
+	NODE *prev,*p;
+	p = list->head;
+	int i;
+	if(pos >= 0 && pos <= (list->length)){
+	if(list->head == NULL)
+	{
+		return;
+	}
+	else if(pos == 0 && list->head->rlink == NULL)
+	{
+		free(p);
+		list->head = NULL;
+		return;
+	}
+	else if(pos == 0)
+	{
+		prev = p;
+		list->head = p->rlink;
+		list->head->llink = NULL;
+		list->length--;
+		free(prev);
+		return;
+	}
+	else
+	{
+		for(i = 0; i<pos;i++)
+		{
+			prev = p;
+			p = p->rlink;
+		}
+		prev->rlink = p->rlink;
+		if(p->rlink != NULL)
+			p->rlink->llink = prev;
+		else
+			p->rlink = NULL;
+		free(p);
+		list->length--;
+		return;
+	}
+	}
+	else 
+		return;
+}
+void display(List *list)
+{
+	NODE * temp;
+	temp = list->head;
+	if(temp == NULL)
+			printf("List EMPTY!!!!!!!!!!!!!!!!\n\n ");
+	else
+	{
+		while(temp!= NULL)
+		{
+			printf("%d --> ", temp->data);
+			temp = temp->rlink;
+		}
+		printf("\n\n");
 	}
 }
-
-void deleteint(int x)
+void main()
 {
-    node *del=top;
-    if(del->data == x)
-    {
-        if(_______)// Write the condition for which TOP should be NULL while deleting a particular node in a doubly linked list.
-        {
-            top=NULL;
-            return;
-        }
-        del->next->prev=NULL;
-        top=del->next;
-    }
-    else
-    {
-        node *delsuc=del->next;
-        if(del==NULL)
-        {
-            cout<<"\nElement Not Found\n";
-            return;
-        }
-        if(delsuc==NULL)
-        {
-            cout<<"\nElement Not Found\n";
-            return;
-        }
-        while(delsuc->data != x)
-        {
-            del=del->next;
-            delsuc=delsuc->next;
-            if(del==NULL)
-	    {
-		cout<<"\nElement Not Found\n";
-		return;
-	    }
-            if(delsuc==NULL)
-	    {
-		cout<<"\nElement Not Found\n";
-		return;
-	    }
-        }
-        del->next=delsuc->next;
-        if(delsuc->next!=NULL)
-      		//Write the step for which a doubly linked list needs to be connected after deleting an element from the list.			
-    }
+	int choice;
+	int data,pos = 0;
+	List *list  = create_list();
+	while(1)
+	{
+		printf("\n\nEnter\n 1. For insert begining\n 2. For insert at position\n \
+3. insert at end \n 4. delete at beginning\n 5. delete at position \n 6. delete at end\n\
+ 7. display \n\n");
+		scanf("%d",&choice);
+		switch(choice)
+		{
+			case 1: 
+					printf("Enter the data:- ");
+					scanf("%d",&data);
+					insertat(list,data,pos);
+					break;
+			case 2:
+					printf("Enter the data:- ");
+					scanf("%d",&data);
+					printf("Enter the position:- ");
+					scanf("%d",&pos);
+					insertat(list,data,pos);
+					break;
+			case 3:
+					printf("Enter the data:- ");
+					scanf("%d",&data);
+					insertat(list,data,pos = (list->length));
+					break;
+			case 4:
+					deleteat(list,pos = 0);
+					break;
+			case 5:
+					printf("Enter the position:- ");
+					scanf("%d",&pos);
+					deleteat(list,pos);
+					break;
+			case 6:
+					deleteat(list,pos = (list->length)-1);
+					break;
+			case 7:
+					display(list);
+					break;
+			case 8:
+					exit(0);
+			default:
+					printf("Invalid INPUT");
+		}
+	}
 }
-
