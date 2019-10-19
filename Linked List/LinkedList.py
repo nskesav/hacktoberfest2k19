@@ -23,6 +23,7 @@ class LinkedList:
         current = self.head
         while current is not None:
             print(current.data, end = ' ')
+            current = current.next
      
  
 a_llist = LinkedList()
@@ -37,4 +38,5 @@ time.sleep(10)
 decision =input(pyfiglet.figlet_format('Do you wish to exit?',font='3-d'))
 if decision == 'YES' or 'y' or 'Yes' or 'yes':
     sys.exit()
+
 
