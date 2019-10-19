@@ -1,6 +1,6 @@
 #include<stdio.h>
 #include<stdlib.h>
-
+//PrograM tO cREATE AND uSE dOUBLY LINKED lIST
 typedef struct node 
 {
 	struct node *rlink;
